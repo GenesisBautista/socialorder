@@ -1,13 +1,23 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <navbar></navbar>
+  <drawer></drawer>
+  <main class="mdl-layout__content">
     <router-view/>
-  </div>
+  </main>
+</div>
 </template>
 
 <script>
+import navbar from './components/global/navbar'
+import drawer from './components/global/drawer'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    navbar,
+    drawer
+  }
 }
 </script>
 
@@ -17,7 +27,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+.demo-layout-transparent {
+  background: url('./assets/transparent.jpg') center / cover;
 }
 </style>
