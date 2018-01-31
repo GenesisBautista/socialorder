@@ -1,24 +1,20 @@
 const express = require('express')
 const router = express.Router()
-const passport = require('passport')
 
 const controller = require('../controllers/users')
+const policy = require('../policies/users')
 
 // register
 router.post(
   '/register',
+  policy.register,
   controller.register
 )
 
-// authenticate
+// login
 router.post(
-  '/authenticate',
-  controller.authenticate
+  '/login',
+  controller.login
 )
-
-// profile
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  res.json({user: req.user})
-})
 
 module.exports = router
