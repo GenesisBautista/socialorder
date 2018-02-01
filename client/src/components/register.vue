@@ -1,33 +1,55 @@
 <template>
-<div>
-  <h1>Register</h1>
-  <form>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="firstName" v-model="firstName">
-      <label class="mdl-textfield__label" for="firstName">First Name</label>
-    </div>
-    <br>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="lastName" v-model="lastName">
-      <label class="mdl-textfield__label" for="lastName">Last Name</label>
-    </div>
-    <br>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="email" id="email" v-model="email">
-      <label class="mdl-textfield__label" for="email">Email Address</label>
-      <span class="mdl-textfield__error">Not an email address</span>
-    </div>
-    <br>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="password" id="password" v-model="password">
-      <label class="mdl-textfield__label" for="password">Password</label>
-    </div>
-    <br>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" @click="register">
-      Register
-    </button>
-  </form>
-</div>
+<v-card>
+  <v-card-title>
+    <span class="headline">Register New User</span>
+  </v-card-title>
+  <v-card-text>
+    <v-container grid-list-md>
+      <v-layout wrap>
+        <v-flex xs12 sm6>
+          <v-text-field
+            name="firstName"
+            label="First Name"
+            id="firstName"
+            v-model="firstName"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-text-field
+            name="lastName"
+            label="Last Name"
+            id="lastName"
+            v-model="lastName"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm12>
+          <v-text-field
+            name="email"
+            label="Email Address"
+            id="email"
+            v-model="email"
+          ></v-text-field>
+        </v-flex>
+        <v-flex xs12 sm12>
+          <v-text-field
+            name="password"
+            label="Password"
+            id="password"
+            v-model="password"
+            type="password"
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-alert v-bind:color="alert.type" value="true">
+      {{alert.msg}}
+    </v-alert>
+  </v-card-text>
+  <v-card-actions>
+    <v-spacer></v-spacer>
+    <v-btn color="primary" dark @click="register">Register</v-btn>
+  </v-card-actions>
+</v-card>
 </template>
 
 <script>
@@ -39,22 +61,33 @@ export default {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      alert: {
+        type: 'info',
+        msg: 'Complete form to register'
+      }
     }
   },
   methods: {
-    async register () { // eslint-disable-next-line
-      const response = await authService.register({ 
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        password: this.password
-      })
-      console.log(response.data)
+    async register () {
+      try {
+        await authService.register({
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          password: this.password
+        })
+        this.alert.type = 'success'
+        this.alert.msg = 'Registration Successful'
+      } catch (error) {
+        this.alert.type = 'error'
+        this.alert.msg = error.response.data.error
+      }
     }
   }
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
 </style>
