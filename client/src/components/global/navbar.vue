@@ -1,5 +1,5 @@
 <template>
-<v-toolbar app dark color="primary" fixed>
+<v-toolbar dark color="primary" fixed v-scroll="onScroll">
   <v-toolbar-title>SocialOrder</v-toolbar-title>
   <v-spacer></v-spacer>
   <v-toolbar-side-icon class="hidden-md-and-up"></v-toolbar-side-icon>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import register from '../register'
+import register from '../alerts/register'
 
 export default {
   name: 'navbar',
@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       register: false,
-      user: false
+      user: null
     }
   }
 }

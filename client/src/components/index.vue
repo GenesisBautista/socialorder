@@ -1,6 +1,6 @@
 <template>
-<v-content>
-  <section>
+<v-content class="carouselFix">
+  <section style="height: 100vh">
     <hero></hero>
   </section>
 
@@ -10,16 +10,7 @@
         column
         wrap
         align-center
-        class="my-5"
       >
-        <v-flex xs12 sm4>
-          <div class="text-center">
-            <h2 class="headline">This is to test Parallax</h2>
-            <span class="subheading">
-              So is this!
-            </span>
-          </div>
-        </v-flex>
         <v-flex xs12>
           <v-container grid-list-xl>
             <v-layout row wrap align-center>
@@ -89,5 +80,7 @@ export default {
 </script>
 
 <style scoped>
-
+.carouselFix{
+  padding: 0px;
+}
 </style>
