@@ -1,6 +1,6 @@
 <template>
-<v-content class="carouselFix">
-  <section style="height: 100vh">
+<v-content>
+  <section style="height: 100vh; width: 100%;">
     <hero></hero>
   </section>
 
@@ -80,7 +80,5 @@ export default {
 </script>
 
 <style scoped>
-.carouselFix{
-  padding: 0px;
-}
+
 </style>

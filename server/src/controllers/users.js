@@ -3,79 +3,89 @@ const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 
 function jwtCreateToken (user) {
-  return jwt.sign(user, config.secret, {
-    expiresIn: 604800
-  })
+  return jwt.sign(user, config.jwt.secret, {
+    expiresIn: config.jwt.expiration
+  });
 }
 
 module.exports = {
 
   // register new user
   register (req, res, next) {
-    const user = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password
-    }
-    let newUser = new Users(user)
-    Users.addUser(newUser, (err, user) => {
-      if (err) {
+    Users.createUser(req.body)
+      .then((newUser) => {
+        let user = {
+          _id: newUser._id,
+          username: newUser.username,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          email: newUser.email,
+          joined: newUser.joined
+        };
+
+        return res.send({
+          user: user,
+          token: jwtCreateToken(user)
+        });
+      })
+      .catch((err) => {
         switch (err.code) {
           case 11000:
             res.status(400).send({
-              error: 'Email already registered'
-            })
-            break
+              error: 'Username or email already used'
+            });
+            break;
           case 11601:
             res.status(400).send({
               error: 'Lost connection to server'
-            })
-            break
+            });
+            break;
           default :
-            res.status(400).send({
-              error: 'Server not available'
-            })
+            res.status(400).send(err);
         }
-      } else {
-        Users.getUserByEmail(user.email, (err, user) => {
-          if (err) {
-            res.status(500).send({ error: 'How did you get here?' })
-          } else {
-            delete user.password
-            res.send({
-              user: user.toJSON(),
-              token: jwtCreateToken(user.toJSON())
-            })
-          }
-        })
-      }
-    })
+      });
   },
 
   // login
   login (req, res, next) {
-    const email = req.body.email
-    const password = req.body.password
+    const email = req.body.email;
+    const password = req.body.password;
+    var possibleUser = null;
 
-    Users.getUserByEmail(email, (err, user) => {
-      if (err || !user) {
-        return res.status(404).send({
-          error: 'Email not found'
-        })
-      }
+    Users.findByEmail(email)
+      .then((user) => {
+        if (!user) {
+          res.status(400).send({
+            error: 'No account found'
+          });
+        }
+        possibleUser = user;
+        return {candidate: password, hash: user.password};
+      })
+      .then(Users.comparePassword)
+      .then((result) => {
+        if (result) {
+          let user = {
+            _id: possibleUser._id,
+            username: possibleUser.username,
+            firstName: possibleUser.firstName,
+            lastName: possibleUser.lastName,
+            email: possibleUser.email,
+            joined: possibleUser.joined
+          };
 
-      Users.comparePassword(password, user.password, (err, isMatch) => {
-        if (err) throw err
-        if (isMatch) {
-          res.send({
-            user: user.toJSON(),
-            token: jwtCreateToken(user.toJSON())
-          })
+          return res.send({
+            user: user,
+            token: jwtCreateToken(user)
+          });
         } else {
-          return res.status(401).send({error: 'Wrong password'})
+          return res.status(400).send({
+            error: 'Incorrect Password'
+          });
         }
       })
-    })
+      .catch((err) => {
+        res.status(400).send(err);
+      })
   }
 }
