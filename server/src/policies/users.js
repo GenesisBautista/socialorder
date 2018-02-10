@@ -52,7 +52,7 @@ module.exports = {
     }
   },
 
-  // authenticate
+  // authenticate (this might move)
   authenticate (req, res, next) {
     passport.authenticate('jwt', (err, user) => {
       if (err || !user) {

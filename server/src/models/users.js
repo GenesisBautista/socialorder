@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 var userSchema = mongoose.Schema({
   username: {
@@ -36,42 +36,8 @@ var userSchema = mongoose.Schema({
 
 var User = module.exports = mongoose.model('Users', userSchema);
 
-module.exports.getUserById = (id, callback) => {
-  User.findById(id, callback);
-};
-
-module.exports.getUserByEmail = (email, callback) => {
-  const query = {email: email};
-  User.findOne(query, callback);
-};
-
-module.exports.getUserByUsername = (username, callback) => {
-  const query = {username: username};
-  User.findOne(query, callback);
-};
-
-module.exports.addUser = (newUser, callback) => {
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) throw err;
-    bcrypt.hash(newUser.password, salt, (err, hash) => {
-      if (err) throw err;
-      newUser.password = hash;
-      newUser.save(callback);
-    });
-  });
-};
-
-module.exports.comparePassword = (candidatePassword, hash, callback) => {
-  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-    if (err) throw err;
-    callback(null, isMatch);
-  })
-}
-
-// promise test
-
 module.exports.createUser = (user) => new Promise((resolve, reject) => {
-  let newUser = new User(user)
+  let newUser = new User(user);
   try {
     var salt = bcrypt.genSaltSync(10);
     newUser.password = bcrypt.hashSync(newUser.password, salt);
@@ -97,14 +63,20 @@ module.exports.findByEmail = (email) => new Promise((resolve, reject) => {
   const query = {email: email};
   User.findOne(query, (err, user) => {
     if (err) return reject(err);
-    else resolve(user);
+    else {
+      if (user) {
+        resolve(user);
+      } else {
+        reject(new Error('User not found'));
+      }
+    }
   });
 });
 
 module.exports.comparePassword = (passwords) => new Promise((resolve, reject) => {
   try {
-    resolve(bcrypt.compareSync(passwords.candidate, passwords.hash))
+    bcrypt.compareSync(passwords.candidate, passwords.hash) ? resolve() : reject(new Error('Password Did Not Match'));
   } catch (err) {
-    reject(err)
+    reject(err);
   }
 });

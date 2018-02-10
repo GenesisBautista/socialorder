@@ -1,5 +1,5 @@
 <template>
-<v-card class="grey lighten-4">
+<v-card class="grey lighten-4 animate">
     <v-form v-model="valid" ref="form" method="post" lazy-validation v-on:submit.prevent="login">
     <v-card-title>
       <span class="headline">Login</span>
@@ -26,14 +26,15 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <v-alert v-bind:color="alert.type" value="true" fixed>
-        {{alert.msg}}
-      </v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="primary" @click="login" :disabled="!valid" type="submit">Login</v-btn>
+      <v-btn color="primary" @click.native="dialog = false">Close</v-btn>
     </v-card-actions>
+    <v-alert v-bind:color="alert.type" value="true" fixed>
+          {{alert.msg}}
+    </v-alert>
   </v-form>
 </v-card>
 </template>
@@ -82,5 +83,8 @@ export default {
 </script>
 
 <style scoped>
-
+.animate{
+  -webkit-transition: height 2s; /* Safari */
+  transition: height 2s;
+}
 </style>

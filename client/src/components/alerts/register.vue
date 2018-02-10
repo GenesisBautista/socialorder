@@ -7,6 +7,14 @@
     <v-card-text>
       <v-container grid-list-md>
         <v-layout wrap>
+          <v-flex xs12 sm12>
+            <v-text-field
+              name="username"
+              label="Username"
+              v-model="username"
+              :rules="username"
+            ></v-text-field>
+          </v-flex>
           <v-flex xs12 sm6>
             <v-text-field
               name="firstName"

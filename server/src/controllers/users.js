@@ -1,6 +1,6 @@
-const Users = require('../models/users')
-const jwt = require('jsonwebtoken')
-const config = require('../config/config')
+const Users = require('../models/users');
+const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 function jwtCreateToken (user) {
   return jwt.sign(user, config.jwt.secret, {
@@ -10,7 +10,7 @@ function jwtCreateToken (user) {
 
 module.exports = {
 
-  // register new user
+  // register
   register (req, res, next) {
     Users.createUser(req.body)
       .then((newUser) => {
@@ -54,38 +54,40 @@ module.exports = {
 
     Users.findByEmail(email)
       .then((user) => {
-        if (!user) {
-          res.status(400).send({
-            error: 'No account found'
-          });
-        }
         possibleUser = user;
         return {candidate: password, hash: user.password};
       })
       .then(Users.comparePassword)
-      .then((result) => {
-        if (result) {
-          let user = {
-            _id: possibleUser._id,
-            username: possibleUser.username,
-            firstName: possibleUser.firstName,
-            lastName: possibleUser.lastName,
-            email: possibleUser.email,
-            joined: possibleUser.joined
-          };
-
-          return res.send({
-            user: user,
-            token: jwtCreateToken(user)
-          });
-        } else {
-          return res.status(400).send({
-            error: 'Incorrect Password'
-          });
-        }
+      .then(() => {
+        let user = {
+          _id: possibleUser._id,
+          username: possibleUser.username,
+          firstName: possibleUser.firstName,
+          lastName: possibleUser.lastName,
+          email: possibleUser.email,
+          joined: possibleUser.joined
+        };
+        return res.send({
+          user: user,
+          token: jwtCreateToken(user)
+        });
       })
       .catch((err) => {
-        res.status(400).send(err);
+        switch (err.message) {
+          case 'Password Did Not Match':
+            res.status(400).send({
+              error: 'Incorrect Password'
+            });
+            break;
+          case 'User not found':
+            res.status(400).send({
+              error: 'No account found'
+            });
+            break;
+          default:
+            res.status(400).send(err);
+            break;
+        }
       })
   }
 }
