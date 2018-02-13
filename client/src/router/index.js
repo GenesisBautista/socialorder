@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/index'
-import Profile from '@/components/profile'
+import Profile from '@/components/profile/index'
 
 Vue.use(Router)
 

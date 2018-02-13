@@ -83,12 +83,19 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
   name: 'Profile',
   data () {
     return {
       user: this.$store.state.user
     }
+  },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn'
+    ])
   },
   methods: {
     formatDate (input) {
@@ -105,6 +112,13 @@ export default {
       var year = date.getFullYear()
 
       return day + ' ' + monthNames[monthIndex] + ' ' + year
+    }
+  },
+  async mounted () {
+    if (this.isUserLoggedIn) {
+
+    } else {
+      this.$router.push('/')
     }
   }
 }

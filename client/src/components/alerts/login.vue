@@ -1,5 +1,5 @@
 <template>
-<v-card class="grey lighten-4 animate">
+<v-card class="grey lighten-4">
     <v-form v-model="valid" ref="form" method="post" lazy-validation v-on:submit.prevent="login">
     <v-card-title>
       <span class="headline">Login</span>
@@ -11,7 +11,6 @@
             <v-text-field
               name="email"
               label="Email Address"
-              :rules="emailRules"
               v-model="email"
             ></v-text-field>
           </v-flex>
@@ -20,7 +19,6 @@
               name="password"
               label="Password"
               v-model="password"
-              :rules="passwordRules"
               type="password"
             ></v-text-field>
           </v-flex>
@@ -29,8 +27,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" @click="login" :disabled="!valid" type="submit">Login</v-btn>
-      <v-btn color="primary" @click.native="dialog = false">Close</v-btn>
+      <v-btn color="primary" @click="login" :disabled="!valid">Login</v-btn>
     </v-card-actions>
     <v-alert v-bind:color="alert.type" value="true" fixed>
           {{alert.msg}}
@@ -69,12 +66,14 @@ export default {
             email: this.email,
             password: this.password
           })
+          console.log(response)
           this.$store.dispatch('setToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)
           this.$router.push('/profile')
         } catch (error) {
           this.alert.type = 'error'
-          this.alert.msg = error.response.data.error || 'Oops!'
+          console.log(error.response)
+          this.alert.msg = error.response.data.error
         }
       }
     }
@@ -83,8 +82,4 @@ export default {
 </script>
 
 <style scoped>
-.animate{
-  -webkit-transition: height 2s; /* Safari */
-  transition: height 2s;
-}
 </style>

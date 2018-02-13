@@ -1,19 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/users');
+const controller = require('../controllers/posts');
 const policy = require('../policies/users');
 
-// register
+// submit new post
 router.post(
-  '/register',
+  '/post',
   policy.register,
   controller.register
 );
 
-// login
+// reply to post
 router.post(
-  '/login',
-  controller.login
+  '/reply'
+);
+
+// view post
+router.post(
+  '/view'
 );
 
 module.exports = router;

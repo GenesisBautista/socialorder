@@ -63,13 +63,7 @@ module.exports.findByEmail = (email) => new Promise((resolve, reject) => {
   const query = {email: email};
   User.findOne(query, (err, user) => {
     if (err) return reject(err);
-    else {
-      if (user) {
-        resolve(user);
-      } else {
-        reject(new Error('User not found'));
-      }
-    }
+    else user ? resolve(user) : reject(new Error('User not found'));
   });
 });
 

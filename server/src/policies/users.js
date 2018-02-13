@@ -1,9 +1,6 @@
-const Joi = require('joi')
-const passport = require('passport')
+const Joi = require('joi');
 
 module.exports = {
-
-  // register
   register (req, res, next) {
     const schema = {
       username: Joi.string().regex(/^[A-Za-z0-9_@./#&+-]{5,30}$/).required(),
@@ -11,7 +8,7 @@ module.exports = {
       lastName: Joi.string().max(20),
       email: Joi.string().email().required(),
       password: Joi.string().regex(/^[A-Za-z0-9_@./#&+-]{5,30}$/).required()
-    }
+    };
 
     const {error} = Joi.validate(req.body, schema)
 
@@ -50,19 +47,5 @@ module.exports = {
     } else {
       next()
     }
-  },
-
-  // authenticate (this might move)
-  authenticate (req, res, next) {
-    passport.authenticate('jwt', (err, user) => {
-      if (err || !user) {
-        res.status(403).send({
-          error: 'Please sign in'
-        })
-      } else {
-        req.user = user
-        next()
-      }
-    })
   }
 }

@@ -23,7 +23,7 @@ module.exports = {
           joined: newUser.joined
         };
 
-        return res.send({
+        return res.status(200).send({
           user: user,
           token: jwtCreateToken(user)
         });
@@ -67,27 +67,13 @@ module.exports = {
           email: possibleUser.email,
           joined: possibleUser.joined
         };
-        return res.send({
+        return res.status(200).send({
           user: user,
           token: jwtCreateToken(user)
         });
       })
       .catch((err) => {
-        switch (err.message) {
-          case 'Password Did Not Match':
-            res.status(400).send({
-              error: 'Incorrect Password'
-            });
-            break;
-          case 'User not found':
-            res.status(400).send({
-              error: 'No account found'
-            });
-            break;
-          default:
-            res.status(400).send(err);
-            break;
-        }
+        res.status(400).send({error: err.message});
       })
   }
 }

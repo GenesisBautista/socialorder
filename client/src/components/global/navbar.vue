@@ -6,37 +6,37 @@
     </a>
   </v-toolbar-title>
   <v-spacer></v-spacer>
-  <v-toolbar-side-icon class="hidden-md-and-up"></v-toolbar-side-icon>
   <v-toolbar-items class="hidden-sm-and-down" v-if="!$store.state.isUserLoggedIn">
-    <v-btn flat @click.stop="register = true">Register</v-btn>
-    <v-dialog v-model="register" max-width="500px">
+    <v-btn flat dark @click.stop="register = true">Register</v-btn>
+    <v-dialog v-model="register" width="500">
       <register></register>
     </v-dialog>
-    <v-btn flat @click.stop="login = true">Login</v-btn>
-    <v-dialog v-model="login" max-width="500px">
+    <v-btn flat dark @click.stop="login = true">Login</v-btn>
+    <v-dialog v-model="login" width="500">
       <login></login>
     </v-dialog>
   </v-toolbar-items>
   <v-toolbar-items class="hidden-sm-and-down" v-if="$store.state.isUserLoggedIn">
-    <v-btn flat @click="logout">Log Out</v-btn>
+    <v-btn flat dark to="profile">Profile</v-btn>
+    <v-btn flat dark @click="logout">Log Out</v-btn>
   </v-toolbar-items>
 </v-toolbar>
 </template>
 
 <script>
-import register from '../alerts/register'
-import login from '../alerts/login'
+import login from '@/components/alerts/login'
+import register from '@/components/alerts/register'
 
 export default {
   name: 'navbar',
   components: {
-    register,
-    login
+    login,
+    register
   },
   data () {
     return {
-      register: false,
       login: false,
+      register: false,
       user: null
     }
   },
