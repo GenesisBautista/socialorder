@@ -74,6 +74,28 @@ module.exports = {
       })
       .catch((err) => {
         res.status(400).send({error: err.message});
+      });
+  },
+
+  // retrieve user
+  findUser (req, res, next) {
+    var username = req.params.username;
+
+    Users.findByUsername(username)
+      .then((user) => {
+        console.log(user);
+        let result = {
+          _id: user._id,
+          username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          joined: user.joined
+        };
+        return res.status(200).send(result);
       })
+      .catch((err) => {
+        res.status(404).send({error: err.message});
+      });
   }
 }

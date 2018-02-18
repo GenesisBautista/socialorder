@@ -69,7 +69,7 @@ export default {
           console.log(response)
           this.$store.dispatch('setToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)
-          this.$router.push('/profile')
+          this.$router.push('/')
         } catch (error) {
           this.alert.type = 'error'
           console.log(error.response)

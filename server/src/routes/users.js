@@ -16,4 +16,9 @@ router.post(
   controller.login
 );
 
+router.get(
+  '/profile/:username',
+  controller.findUser
+)
+
 module.exports = router;
