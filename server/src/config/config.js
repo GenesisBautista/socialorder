@@ -4,6 +4,9 @@ module.exports = {
     user: 'dev',
     pass: 'password'
   },
-  secret: 'secret',
+  jwt: {
+    secret: 'secret',
+    expiration: 604800 // 7 days
+  },
   port: 8081
 }

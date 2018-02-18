@@ -1,34 +1,67 @@
 <template>
-<v-toolbar dark color="primary" fixed v-scroll="onScroll">
-  <v-toolbar-title>SocialOrder</v-toolbar-title>
+<v-toolbar dark color="primary" fixed app>
+  <v-toolbar-title>
+    <a @click="$router.push('/')" class="logo">
+      SocialOrder
+    </a>
+  </v-toolbar-title>
   <v-spacer></v-spacer>
-  <v-toolbar-side-icon class="hidden-md-and-up"></v-toolbar-side-icon>
-  <v-toolbar-items class="hidden-sm-and-down">
-    <v-btn flat @click.stop="register = true">Register</v-btn>
-    <v-dialog v-model="register" max-width="500px">
+  <v-toolbar-items class="hidden-sm-and-down" v-if="!this.isUserLoggedIn">
+    <v-btn flat dark @click.stop="register = true">Register</v-btn>
+    <v-dialog v-model="register" width="500">
       <register></register>
     </v-dialog>
-    <v-btn flat to="/login">Login</v-btn>
+    <v-btn flat dark @click.stop="login = true">Login</v-btn>
+    <v-dialog v-model="login" width="500">
+      <login></login>
+    </v-dialog>
+  </v-toolbar-items>
+  <v-toolbar-items class="hidden-sm-and-down" v-if="this.isUserLoggedIn">
+    <v-btn flat dark @click="profile">Profile</v-btn>
+    <v-btn flat dark @click="logout">Log Out</v-btn>
   </v-toolbar-items>
 </v-toolbar>
 </template>
 
 <script>
-import register from '../alerts/register'
+import login from '@/components/alerts/login'
+import register from '@/components/alerts/register'
+import {mapState} from 'vuex'
 
 export default {
   name: 'navbar',
   components: {
+    login,
     register
   },
   data () {
     return {
-      register: false,
-      user: null
+      login: false,
+      register: false
+    }
+  },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user',
+      'route'
+    ])
+  },
+  methods: {
+    async profile () {
+      const username = this.user.username
+      this.$router.push(`/profile/${username}`)
+    },
+    async logout () {
+      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setUser', null)
     }
   }
 }
 </script>
 
 <style scoped>
+.logo{
+  color: white;
+}
 </style>

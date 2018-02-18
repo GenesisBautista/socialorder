@@ -18,7 +18,7 @@
     </v-container>
   </v-carousel-item>
 
-  <v-carousel-item src="/static/hero/3.jpg" key=1>
+  <v-carousel-item src="/static/hero/3.jpg" key=2>
     <v-container grid-list-xl text-xs-center>
       <v-flex xs4 offset-xs4>
         <h1 class="display-4 grey--text text--lighten-4">Cras facilisis mi vitae</h1>
