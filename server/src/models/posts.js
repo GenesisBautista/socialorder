@@ -42,13 +42,14 @@ var postSchema = new mongoose.Schema({
 var Post = module.exports = mongoose.model('Post', postSchema);
 
 function generateURL (username, date, title) {
+  console.log(username + date + title);
   return crypto.createHash('md5').update(username + date + title).digest('hex');
 }
 
 module.exports.submitPost = (post) => new Promise((resolve, reject) => {
   const parse = {
     ...post,
-    url: generateURL(post.username, Date.now(), post.title)
+    url: generateURL(post.author._id, Date.now().toString(), post.title)
   }
   var newPost = new Post(parse);
   newPost.save(function (err) {
