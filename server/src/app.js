@@ -3,21 +3,23 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
-const passport = require('passport')
+// const passport = require('passport')
 
 const config = require('./config/config')
 const users = require('./routes/users')
+const posts = require('./routes/posts')
 
 const app = express()
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
-app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.initialize())
+// app.use(passport.session())
 
-require('./config/passport')(passport);
+require('./config/passport');
 
-app.use('/users', users)
+app.use('/users', users);
+app.use('/post', posts);
 
 mongoose.connect(config.database.uri, {user: config.database.user, pass: config.database.pass}).then(
   () => {
