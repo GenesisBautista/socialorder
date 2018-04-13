@@ -83,7 +83,6 @@ module.exports = {
 
     Users.findByUsername(username)
       .then((user) => {
-        console.log(user);
         let result = {
           _id: user._id,
           username: user.username,

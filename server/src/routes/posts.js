@@ -1,22 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/posts');
-const policy = require('../policies/users');
+const authenticate = require('../policies/authenticate');
+const policies = require('../policies/posts');
 
 // submit new post
 router.post(
-  '/post',
-  policy.register,
-  controller.register
-);
-
-// reply to post
-router.post(
-  '/reply'
+  '/',
+  authenticate.authenticate,
+  policies.post,
+  controller.post
 );
 
 // view post
-router.post(
+router.get(
   '/view'
 );
 

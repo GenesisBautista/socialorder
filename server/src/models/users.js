@@ -53,10 +53,11 @@ module.exports.createUser = (user) => new Promise((resolve, reject) => {
 })
 
 module.exports.findById = (id) => new Promise((resolve, reject) => {
-  const query = {id: id};
-  resolve({user: User.findOne(query, (err) => {
+  const query = {_id: id};
+  User.findOne(query, (err, user) => {
     if (err) return reject(err);
-  })});
+    else user ? resolve(user) : reject(new Error('User not found'));
+  });
 })
 
 module.exports.findByUsername = (username) => new Promise((resolve, reject) => {
