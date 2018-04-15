@@ -12,9 +12,19 @@ router.post(
   controller.post
 );
 
+router.get(
+  '/view/:page',
+  controller.getNewPosts
+);
+
 // view post
 router.get(
-  '/view'
+  '/:id',
+  controller.getPost
 );
+
+router.post(
+  '/edit'
+)
 
 module.exports = router;

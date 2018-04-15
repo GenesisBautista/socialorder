@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -10,10 +9,6 @@ var postSchema = new mongoose.Schema({
   },
   message: {
     type: String
-  },
-  url: {
-    type: String,
-    required: true
   },
   dateSubmitted: {
     type: Date,
@@ -41,15 +36,9 @@ var postSchema = new mongoose.Schema({
 
 var Post = module.exports = mongoose.model('Post', postSchema);
 
-function generateURL (username, date, title) {
-  console.log(username + date + title);
-  return crypto.createHash('md5').update(username + date + title).digest('hex');
-}
-
 module.exports.submitPost = (post) => new Promise((resolve, reject) => {
   const parse = {
-    ...post,
-    url: generateURL(post.author._id, Date.now().toString(), post.title)
+    ...post
   }
   var newPost = new Post(parse);
   newPost.save(function (err) {
@@ -58,10 +47,18 @@ module.exports.submitPost = (post) => new Promise((resolve, reject) => {
   });
 });
 
-module.exports.getPost = (url) => new Promise((resolve, reject) => {
-  const query = {url: url};
+module.exports.getPost = (id) => new Promise((resolve, reject) => {
+  const query = {_id: id};
   Post.findOne(query, (err, post) => {
     if (err) return reject(err);
     else post ? resolve(post) : reject(new Error('Post not found'));
+  });
+});
+
+module.exports.getNewPosts = (page) => new Promise((resolve, reject) => {
+  var skip = (page - 1) * 10;
+  Post.find().limit(10).skip(skip).sort('-dateSubmitted').exec((err, posts) => {
+    if (err) return reject(err);
+    else posts ? resolve(posts) : reject(new Error('No Posts Exists'));
   });
 });

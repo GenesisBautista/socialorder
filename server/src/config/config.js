@@ -1,6 +1,6 @@
 module.exports = {
   database: {
-    uri: 'mongodb://localhost:32768/socialorder',
+    uri: 'mongodb://localhost:27017/socialorder',
     user: 'dev',
     pass: 'password'
   },

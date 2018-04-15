@@ -2,7 +2,7 @@ const Posts = require('../models/posts');
 
 module.exports = {
 
-  // post
+  // post manipulation
   post (req, res, next) {
     var newPost = {
       title: req.body.title,
@@ -14,7 +14,7 @@ module.exports = {
     };
     Posts.submitPost(newPost)
       .then((newPost) => {
-        res.status(200).send({url: newPost.url});
+        res.status(200).send({id: newPost._id});
       })
       .catch((err) => {
         switch (err.code) {
@@ -26,6 +26,27 @@ module.exports = {
           default :
             res.status(400).send(err);
         }
+      });
+  },
+
+  // post retrieval
+  getPost (req, res, next) {
+    Posts.getPost(req.params.id)
+      .then((post) => {
+        res.status(200).send(post);
+      })
+      .catch((err) => {
+        res.status(404).send({error: err.message})
+      });
+  },
+
+  getNewPosts (req, res, next) {
+    Posts.getNewPosts(req.params.page)
+      .then((posts) => {
+        res.status(200).send(posts);
+      })
+      .catch((err) => {
+        res.status(404).send({error: err.message});
       });
   }
 }
