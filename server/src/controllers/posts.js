@@ -29,6 +29,28 @@ module.exports = {
       });
   },
 
+  editPost (req, res, next) {
+    var updatedPost = {
+      _id: req.body._id,
+      title: req.body.title,
+      message: req.body.message,
+      author: {
+        _id: req.user._id,
+        username: req.user.username
+      }
+    };
+    Posts.editPost(updatedPost)
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        switch (err.code) {
+          default :
+            res.status(400).send(err);
+        }
+      });
+  },
+
   // post retrieval
   getPost (req, res, next) {
     Posts.getPost(req.params.id)

@@ -62,3 +62,13 @@ module.exports.getNewPosts = (page) => new Promise((resolve, reject) => {
     else posts ? resolve(posts) : reject(new Error('No Posts Exists'));
   });
 });
+
+module.exports.editPost = (post) => new Promise((resolve, reject) => {
+  var query = {'_id': post._id};
+  delete post['_id'];
+  post.dateEditted = Date.now();
+  Post.findOneAndUpdate(query, {$set: post}, {rawResult: true}, (err, result) => {
+    if (err) return reject(err);
+    else result ? resolve(result) : reject(new Error('Could not update post'));
+  })
+});

@@ -12,6 +12,7 @@ router.post(
   controller.post
 );
 
+// view multiple posts
 router.get(
   '/view/:page',
   controller.getNewPosts
@@ -23,8 +24,12 @@ router.get(
   controller.getPost
 );
 
+// edit post
 router.post(
-  '/edit'
+  '/edit',
+  authenticate.authenticate,
+  policies.post,
+  controller.editPost
 )
 
 module.exports = router;

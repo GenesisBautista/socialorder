@@ -83,3 +83,12 @@ module.exports.comparePassword = (passwords) => new Promise((resolve, reject) =>
     reject(err);
   }
 });
+
+module.exports.updateUser = (user) => new Promise((resolve, reject) => {
+  var query = {'_id': user._id};
+  delete user['_id'];
+  User.findOneAndUpdate(query, {$set: user}, {rawResult: true}, (err, result) => {
+    if (err) return reject(err);
+    else result ? resolve(result) : reject(new Error('Could not update user'));
+  })
+});
