@@ -36,16 +36,18 @@ var userSchema = mongoose.Schema({
 
 var User = module.exports = mongoose.model('Users', userSchema);
 
+function generateHash (password) {
+  var salt = bcrypt.genSaltSync(10);
+  return bcrypt.hashSync(password, salt);
+}
+
 module.exports.createUser = (user) => new Promise((resolve, reject) => {
   let newUser = new User(user);
   try {
-    var salt = bcrypt.genSaltSync(10);
-    newUser.password = bcrypt.hashSync(newUser.password, salt);
+    newUser.password = generateHash(newUser.password);
   } catch (err) {
-    console.log(err);
     reject(err);
   }
-
   newUser.save(function (err) {
     if (err) return reject(err);
     resolve(newUser);
@@ -91,4 +93,17 @@ module.exports.updateUser = (user) => new Promise((resolve, reject) => {
     if (err) return reject(err);
     else result ? resolve(result) : reject(new Error('Could not update user'));
   })
+});
+
+module.exports.updatePassword = (user) => new Promise((resolve, reject) => {
+  var query = {'_id': user._id};
+  try {
+    user.password = generateHash(user.password);
+  } catch (err) {
+    reject(err);
+  }
+  User.findOneAndUpdate(query, {$set: user}, {rawResult: true}, (err, result) => {
+    if (err) return reject(err);
+    else result ? resolve(result) : reject(new Error('Could not update password'));
+  });
 });

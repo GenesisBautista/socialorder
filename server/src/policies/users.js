@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 module.exports = {
-  register (req, res, next) {
+  user (req, res, next) {
     const schema = {
       username: Joi.string().regex(/^[A-Za-z0-9_@./#&+-]{5,30}$/).required(),
       firstName: Joi.string().max(20),
@@ -10,7 +10,15 @@ module.exports = {
       password: Joi.string().regex(/^[A-Za-z0-9_@./#&+-]{5,30}$/).required()
     };
 
-    const {error} = Joi.validate(req.body, schema)
+    var userInfo = {
+      username: req.body.username,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    };
+
+    const {error} = Joi.validate(userInfo, schema)
 
     if (error) {
       switch (error.details[0].context.key) {

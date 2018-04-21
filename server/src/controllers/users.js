@@ -96,5 +96,24 @@ module.exports = {
       .catch((err) => {
         res.status(404).send({error: err.message});
       });
+  },
+
+  // update user
+  updateUser (req, res, next) {
+    Users.updateUser(req.body)
+      .then((request) => {
+        let result = {
+          _id: request.value._id,
+          username: request.value.username,
+          firstName: request.value.firstName,
+          lastName: request.value.lastName,
+          email: request.value.email,
+          joined: request.value.joined
+        };
+        return res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send({error: err.message});
+      });
   }
 }
