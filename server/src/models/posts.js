@@ -5,10 +5,13 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var postSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: () => {
+      return this.replyTo != null
+    }
   },
   message: {
-    type: String
+    type: String,
+    required: true
   },
   dateSubmitted: {
     type: Date,
@@ -17,11 +20,31 @@ var postSchema = new mongoose.Schema({
   dateEditted: {
     type: Date
   },
-  isReply: {
-    type: Boolean,
+  replyTo: {
+    type: ObjectId,
     required: true,
-    default: false
+    default: null
   },
+  tags: [{
+    _id: {
+      type: ObjectId,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    agree: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    disagree: {
+      type: Number,
+      required: true,
+      default: 0
+    }
+  }],
   author: {
     _id: {
       type: ObjectId,
@@ -55,7 +78,7 @@ module.exports.getPost = (id) => new Promise((resolve, reject) => {
   });
 });
 
-module.exports.getNewPosts = (page) => new Promise((resolve, reject) => {
+module.exports.getPostByPage = (page) => new Promise((resolve, reject) => {
   var skip = (page - 1) * 10;
   Post.find().limit(10).skip(skip).sort('-dateSubmitted').exec((err, posts) => {
     if (err) return reject(err);

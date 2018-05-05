@@ -62,8 +62,8 @@ module.exports = {
       });
   },
 
-  getNewPosts (req, res, next) {
-    Posts.getNewPosts(req.params.page)
+  getPostByPage (req, res, next) {
+    Posts.getPostByPage(req.params.page)
       .then((posts) => {
         res.status(200).send(posts);
       })

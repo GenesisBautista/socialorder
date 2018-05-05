@@ -9,7 +9,6 @@ function jwtCreateToken (user) {
 }
 
 module.exports = {
-
   // register
   register (req, res, next) {
     Users.createUser(req.body)
